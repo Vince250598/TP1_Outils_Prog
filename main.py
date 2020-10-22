@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import scipy.stats as stats
 
 
 def time_count(data):
@@ -60,4 +61,18 @@ def crimes_by_time_period(data):
 
 data = pd.read_csv('Police_Department_Incidents_-_Previous_Year__2016_.csv')
 data['Time'] = pd.to_datetime(data['Time'], format='%H:%M').dt.time
+data['Date'] = pd.to_datetime(data.Date)
 print(data.info())
+
+
+PdDistrict_mapping = {"BAYVIEW": 0, "CENTRAL": 1, "INGLESIDE": 2, "MISSION": 3, "NORTHERN": 4, "PARK": 5, "RICHMOND": 6,
+                      "SOUTHERN": 7, "TARAVAL": 8, "TENDERLOIN": 9}
+
+Y_PdDistrict = data[['PdDistrict', 'Y']].copy()
+Y_PdDistrict.PdDistrict = Y_PdDistrict.PdDistrict.map(PdDistrict_mapping)
+Y_PdDistrict = np.array(Y_PdDistrict)
+print(Y_PdDistrict)
+
+
+
+print(stats.chi2_contingency(Y_PdDistrict))
