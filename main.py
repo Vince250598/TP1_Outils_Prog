@@ -61,20 +61,20 @@ def crimes_by_time_period(data):
     plt.show()
 
 def crime_location_heatmap(data):
-    data = data.groupby(['Y', 'X']).size()
+    newData = data.groupby(['X', 'Y']).size()
+    print(newData)
 
-    heatmap, xedges, yedges = np.histogram2d(data.index.get_level_values('Y'), data.index.get_level_values('X'),
+    heatmap, xedges, yedges = np.histogram2d(newData.index.get_level_values('X'), newData.index.get_level_values('Y'),
                                              bins=100)
-    extent = [data.index.get_level_values('Y')[0], data.index.get_level_values('Y')[-1],
-              data.index.get_level_values('X')[0], data.index.get_level_values('X')[-1]]
+    extent = [newData.index.get_level_values('X').min(), newData.index.get_level_values('X').max(),
+              newData.index.get_level_values('Y').min(), newData.index.get_level_values('Y').max()]
 
     plt.imshow(heatmap, extent=extent)
-    plt.gca().invert_yaxis()
     plt.show()
 
 
 data = pd.read_csv('Police_Department_Incidents_-_Previous_Year__2016_.csv')
 data['Time'] = pd.to_datetime(data['Time'], format='%H:%M').dt.time
 data['Date'] = pd.to_datetime(data.Date)
-print(data.info())
+print(data.X.describe())
 
